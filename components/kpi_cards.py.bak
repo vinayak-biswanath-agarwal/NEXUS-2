@@ -1,0 +1,155 @@
+import streamlit as st
+
+
+class KPICards:
+
+    def __init__(self, metrics):
+
+        self.metrics = metrics
+
+    # ----------------------------------------------------
+    # Executive KPI Row
+    # ----------------------------------------------------
+
+    def executive(self):
+
+        c1, c2, c3, c4 = st.columns(4)
+
+        with c1:
+
+            st.metric(
+                "📁 Total Epics",
+                self.metrics.total_epics()
+            )
+
+        with c2:
+
+            st.metric(
+                "⭐ Total Features",
+                self.metrics.total_features()
+            )
+
+        with c3:
+
+            st.metric(
+                "📋 User Stories",
+                self.metrics.total_user_stories()
+            )
+
+        with c4:
+
+            st.metric(
+                "🐞 Bugs",
+                self.metrics.total_bugs()
+            )
+
+        st.divider()
+
+        c5, c6, c7, c8 = st.columns(4)
+
+        with c5:
+
+            st.metric(
+                "📦 Total Work Items",
+                self.metrics.total_work_items()
+            )
+
+        with c6:
+
+            st.metric(
+                "📝 Story Points",
+                self.metrics.total_story_points()
+            )
+
+        with c7:
+
+            st.metric(
+                "🚫 Blocked",
+                self.metrics.blocked_items()
+            )
+
+        with c8:
+
+            st.metric(
+                "✅ Completed",
+                self.metrics.completed_items()
+            )
+
+        st.divider()
+
+        c9, c10, c11 = st.columns(3)
+
+        with c9:
+
+            health = self.metrics.delivery_health()
+
+            if "GREEN" in health:
+                st.success(f"Delivery Health\n\n{health}")
+
+            elif "AMBER" in health:
+                st.warning(f"Delivery Health\n\n{health}")
+
+            else:
+                st.error(f"Delivery Health\n\n{health}")
+
+        with c10:
+
+            readiness = self.metrics.release_readiness()
+
+            st.metric(
+                "🚀 Release Readiness",
+                f"{readiness}%"
+            )
+
+            st.progress(readiness / 100)
+
+        with c11:
+
+            active = self.metrics.active_items()
+
+            st.metric(
+                "⚡ Active Work Items",
+                active
+            )
+
+    # ----------------------------------------------------
+    # Executive Summary
+    # ----------------------------------------------------
+
+    def executive_summary(self):
+
+        st.subheader("📊 Executive Summary")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            st.info(
+                f"""
+**Portfolio Overview**
+
+• Total Work Items : {self.metrics.total_work_items()}
+
+• Active Work Items : {self.metrics.active_items()}
+
+• Completed Items : {self.metrics.completed_items()}
+
+• Story Points : {self.metrics.total_story_points()}
+"""
+            )
+
+        with col2:
+
+            st.info(
+                f"""
+**Delivery Status**
+
+• Delivery Health : {self.metrics.delivery_health()}
+
+• Release Readiness : {self.metrics.release_readiness()}%
+
+• Blocked Items : {self.metrics.blocked_items()}
+
+• Open Bugs : {self.metrics.total_bugs()}
+"""
+            )

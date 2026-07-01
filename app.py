@@ -1,0 +1,89 @@
+import streamlit as st
+
+from utils.data_loader import DataLoader
+from components.sidebar import Sidebar
+
+from pages import (
+    executive,
+    portfolio,
+    sprint,
+    quality,
+    resources,
+    ai,
+)
+
+st.set_page_config(
+    page_title="NEXUS",
+    page_icon="📊",
+    layout="wide"
+)
+
+st.title("📊 NEXUS Executive PMO Dashboard")
+
+uploaded_file = st.sidebar.file_uploader(
+
+    "📂 Upload Azure DevOps CSV",
+
+    type=["csv"]
+
+)
+
+if uploaded_file is None:
+
+    st.info("👈 Please upload your Azure DevOps CSV from the left panel.")
+
+    st.stop()
+
+loader = DataLoader(uploaded_file)
+
+df = loader.get_dataframe()
+
+filtered_df = Sidebar(df).show()
+
+st.sidebar.divider()
+
+page = st.sidebar.radio(
+
+    "Navigation",
+
+    [
+
+        "Executive",
+
+        "Portfolio",
+
+        "Sprint",
+
+        "Quality",
+
+        "Resources",
+
+        "AI Insights"
+
+    ]
+
+)
+
+if page == "Executive":
+
+    executive.show(filtered_df)
+
+elif page == "Portfolio":
+
+    portfolio.show(filtered_df)
+
+elif page == "Sprint":
+
+    sprint.show(filtered_df)
+
+elif page == "Quality":
+
+    quality.show(filtered_df)
+
+elif page == "Resources":
+
+    resources.show(filtered_df)
+
+elif page == "AI Insights":
+
+    ai.show(filtered_df)
